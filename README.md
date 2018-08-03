@@ -87,3 +87,4 @@ git add README.md lab5/
 git commit -m "hurr durr some dumb message"
 git push -u origin <your_name>_Branch
 ```
+Let me know if you guys have any issues
