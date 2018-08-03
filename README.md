@@ -1,4 +1,4 @@
-# BlockChain Gambling
+# A Peer to Peer Sports Betting System
 
 ## our initialized git repo
 
