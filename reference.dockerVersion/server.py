@@ -22,6 +22,7 @@ import helloworld_pb2
 import helloworld_pb2_grpc
 
 import pickle
+import fullNode
 
 from pprint import pprint
 
@@ -33,6 +34,7 @@ class Greeter(helloworld_pb2_grpc.GreeterServicer):
         self.peers = []
         self.blockLobby = []
         self.transactionLobby = []
+        self.node = fullNode.FullNode("58334")
 
     # Register w DNS
     def SendRegistration(self, request, context):
