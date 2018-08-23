@@ -12,9 +12,15 @@ module.exports = {
       network_id: "*" // Match any network id
     },
     ropsten: {
-      provider: new HDWalletProvider(mnemonic, "https://ropsten.infura.io/"+infura_apikey),
-      network_id: 3,
-      gas: 4600000
+      provider: function() {
+        return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/"+infura_apikey)},
+      network_id: 3
+    },
+    ropsten2: {
+       network_id: 3,
+       host: "localhost",
+       port:  8545,
+       gas:   2900000
     }
   },
   solc: {

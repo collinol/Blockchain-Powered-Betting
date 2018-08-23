@@ -45,12 +45,11 @@ class Home extends Component {
             <p><strong>Contract Address</strong>: <ContractData contract="Wager" method="thisContractAddr" /></p>
             <p><strong>Side One Volume</strong>: <ContractData contract="Wager" method="sideOneBetTotal" /></p>
             <p><strong>Side Two Volume</strong>: <ContractData contract="Wager" method="sideTwoBetTotal" /></p>
-              <p><strong>Your Bet</strong>: Bet blank on Side blank </p>
               <h3>Bet Your Side and Amount</h3>
-              <ContractForm contract="Wager" method="play" sendArgs={{from: this.props.accounts[0], value: 0, gas: 6000000, gasPrice: 40000000000}} labels={['Bet side: 1 or 2', 'PBT Amount']} />
+              <ContractForm contract="Wager" method="play" sendArgs={{from: this.props.accounts[0], value: 0, gas: 471238, gasPrice: 15000000000000/4}} labels={['Bet side: 1 or 2', 'PBT Amount']} />
               <p></p>
               <h3>Choose winner (Owner only)</h3>
-              <ContractForm contract="Wager" method="draw" labels={['Winner']} />
+              <ContractForm contract="Wager" method="draw" sendArgs={{from: this.props.accounts[0], value: 0, gas: 471238, gasPrice: 15000000000000/4}} labels={['Winner']} />
 
             <br/><br/>
           </div>
@@ -61,10 +60,10 @@ class Home extends Component {
             <p><strong>Total Supply</strong>: <ContractData contract="PredictiveBetToken" method="totalSupply" methodArgs={[{from: this.props.accounts[0]}]} /> <ContractData contract="PredictiveBetToken" method="symbol" hideIndicator /></p>
             <p><strong>My Balance</strong>: <ContractData contract="PredictiveBetToken" method="balanceOf" methodArgs={[this.props.accounts[0]]} /></p>
             <h3>Send Tokens</h3>
-            <ContractForm contract="PredictiveBetToken" method="transfer" sendArgs={{from: this.props.accounts[0]}} labels={['To friend', 'Amount to Send']} />
+            <ContractForm contract="PredictiveBetToken" method="transfer" sendArgs={{from: this.props.accounts[0], gas: 471238, gasPrice: 15000000000000/4}} labels={['To friend', 'Amount to Send']} />
             <p></p>
             <h3>Allot contract allowance aka approval</h3>
-            <ContractForm contract="PredictiveBetToken" method="approve" sendArgs={{from: this.props.accounts[0]}} labels={['To user', 'Amount to allow']} />
+            <ContractForm contract="PredictiveBetToken" method="approve" sendArgs={{from: this.props.accounts[0], gas: 471238, gasPrice: 15000000000000/4}} labels={['To user', 'Amount to allow']} />
             <p></p>
             <h3> Exchange ETH/PBT</h3>
             <p>1 ETH = 1000 PBT</p>
@@ -74,7 +73,7 @@ class Home extends Component {
                     <input type="text" value={this.state.value} onChange={this.handleChange} />
                 </label>
             </form>
-            <ContractForm contract="PredictiveBetToken" method="exchange" sendArgs={{from: this.props.accounts[0], value: this.state.value * 1000000000000000000,}} labels={['To x', 'Amount to Send']} />
+            <ContractForm contract="PredictiveBetToken" method="exchange" sendArgs={{from: this.props.accounts[0], value: this.state.value * 1000000000000000000, gas: 471238, gasPrice: 15000}} labels={['To x', 'Amount to Send']} />
 
             <br/><br/>
           </div>
