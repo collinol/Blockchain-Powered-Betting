@@ -6,6 +6,7 @@ class Home extends Component {
     super(props)
 
     this.contracts = context.drizzle.contracts
+    this.handleApproveButton = this.handleApproveButton.bind(this)
     this.handlePlayButton = this.handlePlayButton.bind(this)
     this.handleDrawButton = this.handleDrawButton.bind(this)
     this.handleSetButton = this.handleSetButton.bind(this)
@@ -18,16 +19,23 @@ class Home extends Component {
       tokenTransferAmount: 0,
       sideBet: 0,
       betAmount: 0,
-      winner : 0
+      winner : 0,
+      addressApproved : '',
+      amountApproved: 0,
     }
   }
 
+
   handlePlayButton() {
-    this.contracts.Wager.methods.play(this.state.sideBet).send()
+    this.contracts.Wager.methods.play(this.state.sideBet, this.state.betAmount).send()
   }
 
   handleDrawButton() {
-    this.contracts.Wager.methods.play(this.state.winner).send()
+    this.contracts.Wager.methods.draw(this.state.winner).send()
+  }
+
+  handleApproveButton(){
+    this.contracts.PredictiveBetToken.methods.approve(this.state.addressApproved, this.state.amountApproved).send()
   }
 
   handleSetButton() {
@@ -35,7 +43,7 @@ class Home extends Component {
   }
 
   handleSendTokens() {
-    this.contracts.TutorialToken.methods.transfer(this.state.tokenRecipientAddress, this.state.tokenTransferAmount).send()
+    this.contracts.PredictiveBetToken.methods.transfer(this.state.tokenRecipientAddress, this.state.tokenTransferAmount).send()
   }
 
   handleInputChange(event) {
@@ -44,17 +52,18 @@ class Home extends Component {
 
   render() {
     // SimpleStorage Vars
-    var storedData = this.props.drizzleStatus.initialized ? this.contracts.SimpleStorage.methods.storedData.data() : 'Loading...'
+    // var storedData = this.props.drizzleStatus.initialized ? this.contracts.SimpleStorage.methods.storedData.data() : 'Loading...'
 
-    // TutorialToken Vars
-    var tokenSymbol = this.props.drizzleStatus.initialized ? this.contracts.TutorialToken.methods.symbol.data() : ''
-    var tokenSupply = this.props.drizzleStatus.initialized ? this.contracts.TutorialToken.methods.totalSupply.data() : 'Loading...'
-    var tokenBalance = this.props.drizzleStatus.initialized ? this.contracts.TutorialToken.methods.balanceOf.data(this.props.accounts[0]) : 'Loading...'
+    // PBT Vars
+    var tokenSymbol = this.props.drizzleStatus.initialized ? this.contracts.PredictiveBetToken.methods.symbol.data() : ''
+    var tokenSupply = this.props.drizzleStatus.initialized ? this.contracts.PredictiveBetToken.methods.totalSupply.cacheCall() : 'Loading...'
+    var tokenBalance = this.props.drizzleStatus.initialized ? this.contracts.PredictiveBetToken.methods.balanceOf.cacheCall(this.props.accounts[0]) : 'Loading...'
 
     // Wager Vars
-    var wagerSideOneTotal = this.props.drizzleStatus.initialized ? this.contracts.Wager.methods.sideOneBetTotal.data() : ''
-    var wagerSideTwoTotal = this.props.drizzleStatus.initialized ? this.contracts.Wager.methods.sideTwoBetTotal.data() : ''
-    // var wagerSideOnePlayers = this.props.drizzleStatus.initialized ? this.contracts.Wager.methods.sideOnePlayers.data() : ''
+    var wagerSideOneTotal = this.props.drizzleStatus.initialized ? this.contracts.Wager.methods.sideOneBetTotal.cacheCall() : ''
+    var wagerSideTwoTotal = this.props.drizzleStatus.initialized ? this.contracts.Wager.methods.sideTwoBetTotal.cacheCall() : ''
+
+      // var wagerSideOnePlayers = this.props.drizzleStatus.initialized ? this.contracts.Wager.methods.sideOnePlayers.data() : ''
     //var wagerSideTwoPlayers = this.props.drizzleStatus.initialized ? this.contracts.Wager.methods.sideTwoPlayers.data() : ''
     // var wagerPlayerAddress = this.props.drizzleStatus.initialized ? this.contracts.Wager.methods.symbol.data() : ''
     // var wagerPlayerBet = this.props.drizzleStatus.initialized ? this.contracts.Wager.methods.symbol.data() : ''
@@ -69,18 +78,7 @@ class Home extends Component {
           </div>
 
           <div className="pure-u-1-1">
-            <h2>SimpleStorage</h2>
-            <p><strong>Stored Value</strong>: {storedData}</p>
-            <form className="pure-form pure-form-stacked">
-              <input name="storageAmount" type="number" value={this.state.storageAmount} onChange={this.handleInputChange} />
-              <button className="pure-button" type="button" onClick={this.handleSetButton}>Store Value of {this.state.storageAmount}</button>
-            </form>
-
-            <br/><br/>
-          </div>
-
-          <div className="pure-u-1-1">
-            <h2>TutorialToken</h2>
+            <h2>PredictiveBetToken</h2>
             <p><strong>Total Supply</strong>: {tokenSupply} {tokenSymbol}</p>
             <p><strong>My Balance</strong>: {tokenBalance}</p>
             <h3>Send Tokens</h3>
@@ -88,6 +86,11 @@ class Home extends Component {
               <input name="tokenRecipientAddress" type="text" value={this.state.tokenRecipientAddress} onChange={this.handleInputChange} placeholder="Address" />
               <input name="tokenTransferAmount" type="number" value={this.state.tokenTransferAmount} onChange={this.handleInputChange} placeholder="Amount" />
               <button className="pure-button" type="button" onClick={this.handleSendTokens}>Send Tokens to {this.state.tokenRecipientAddress}</button>
+            </form>
+           <form className="pure-form pure-form-stacked">
+              <input name="addressApproved" type="text" value={this.state.addressApproved} onChange={this.handleInputChange} placeholder="Address" />
+              <input name="amountApproved" type="number" value={this.state.amountApproved} onChange={this.handleInputChange} placeholder="Amount" />
+              <button className="pure-button" type="button" onClick={this.handleApproveButton}>Approved {this.state.addressApproved}</button>
             </form>
           </div>
 
@@ -100,7 +103,7 @@ class Home extends Component {
               <form className="pure-form pure-form-stacked">
                   <input name="sideBet" type="number" value={this.state.sideBet} onChange={this.handleInputChange} placeholder="1 or 2" />
                   <input name="betAmount" type="number" value={this.state.betAmount} onChange={this.handleInputChange} placeholder="Amount" />
-                  <button className="pure-button" type="button" onClick={this.handlePlayButton}>Bet Side {this.state.sideBet}</button>
+                <button className="pure-button" type="button" onClick={this.handlePlayButton}>Bet Side {this.state.sideBet}</button>
               </form>
               <form className="pure-form pure-form-stacked">
                   <input name="winner" type="number" value={this.state.winner} onChange={this.handleInputChange} placeholder="1 or 2" />

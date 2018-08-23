@@ -1,6 +1,4 @@
-import ComplexStorage from './../build/contracts/ComplexStorage.json'
-import SimpleStorage from './../build/contracts/SimpleStorage.json'
-import TutorialToken from './../build/contracts/TutorialToken.json'
+import PredictiveBetToken from './../build/contracts/PredictiveBetToken.json'
 import Wager from './../build/contracts/Wager.json'
 
 
@@ -13,13 +11,10 @@ const drizzleOptions = {
     }
   },
   contracts: [
-    ComplexStorage,
-    SimpleStorage,
-    TutorialToken,
+    PredictiveBetToken,
     Wager
   ],
   events: {
-    SimpleStorage: ['StorageSet']
   },
   polls: {
     accounts: 1500

@@ -1,16 +1,32 @@
 import React, { Component } from 'react'
 import { AccountData, ContractData, ContractForm } from 'drizzle-react-components'
-import logo from '../../logo.png'
 
 class Home extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {value: ''};
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(event) {
+        this.setState({value: event.target.value});
+    }
+
+    handleSubmit(event) {
+        // alert('A name was submitted: ' + this.state.value);
+        //event.preventDefault();
+    }
+
   render() {
     return (
       <main className="container">
         <div className="pure-g">
           <div className="pure-u-1-1 header">
-            <img src={logo} alt="drizzle-logo" />
-            <h1>Drizzle Examples</h1>
-            <p>Examples of how to get started with Drizzle in various situations.</p>
+            <h1>Final Project</h1>
+            <p>An ERC20 token built for wagering</p>
 
             <br/><br/>
           </div>
@@ -18,30 +34,47 @@ class Home extends Component {
           <div className="pure-u-1-1">
             <h2>Active Account</h2>
             <AccountData accountIndex="0" units="ether" precision="3" />
+            <ContractData contract="PredictiveBetToken" method="balanceOf" methodArgs={[this.props.accounts[0]]} /> <ContractData contract="PredictiveBetToken" method="symbol" hideIndicator />
 
             <br/><br/>
           </div>
 
           <div className="pure-u-1-1">
             <h2>Wager</h2>
-            <p>We wagering now.</p>
+            <p>Place your bets on the winning side.</p>
+            <p><strong>Contract Address</strong>: <ContractData contract="Wager" method="thisContractAddr" /></p>
             <p><strong>Side One Volume</strong>: <ContractData contract="Wager" method="sideOneBetTotal" /></p>
             <p><strong>Side Two Volume</strong>: <ContractData contract="Wager" method="sideTwoBetTotal" /></p>
               <p><strong>Your Bet</strong>: Bet blank on Side blank </p>
               <h3>Bet Your Side and Amount</h3>
-              <ContractForm contract="Wager" method="play" sendArgs={{from: this.props.accounts[0], value: 10000000000000000}} labels={['Side']} />
+              <ContractForm contract="Wager" method="play" sendArgs={{from: this.props.accounts[0], value: 0, gas: 6000000, gasPrice: 40000000000}} labels={['Bet side: 1 or 2', 'PBT Amount']} />
+              <p></p>
+              <h3>Choose winner (Owner only)</h3>
               <ContractForm contract="Wager" method="draw" labels={['Winner']} />
 
             <br/><br/>
           </div>
 
           <div className="pure-u-1-1">
-            <h2>TutorialToken</h2>
-            <p>Here we have a form with custom, friendly labels. Also note the token symbol will not display a loading indicator. We've suppressed it with the <code>hideIndicator</code> prop because we know this variable is constant.</p>
-            <p><strong>Total Supply</strong>: <ContractData contract="TutorialToken" method="totalSupply" methodArgs={[{from: this.props.accounts[0]}]} /> <ContractData contract="TutorialToken" method="symbol" hideIndicator /></p>
-            <p><strong>My Balance</strong>: <ContractData contract="TutorialToken" method="balanceOf" methodArgs={[this.props.accounts[0]]} /></p>
+            <h2>PredictiveBetToken</h2>
+            <p> PBT enables you to wager your tokens for safe, smart betting </p>
+            <p><strong>Total Supply</strong>: <ContractData contract="PredictiveBetToken" method="totalSupply" methodArgs={[{from: this.props.accounts[0]}]} /> <ContractData contract="PredictiveBetToken" method="symbol" hideIndicator /></p>
+            <p><strong>My Balance</strong>: <ContractData contract="PredictiveBetToken" method="balanceOf" methodArgs={[this.props.accounts[0]]} /></p>
             <h3>Send Tokens</h3>
-            <ContractForm contract="TutorialToken" method="transfer" sendArgs={{from: this.props.accounts[0], value: 100000000000000000}} labels={['To x', 'Amount to Send']} />
+            <ContractForm contract="PredictiveBetToken" method="transfer" sendArgs={{from: this.props.accounts[0]}} labels={['To friend', 'Amount to Send']} />
+            <p></p>
+            <h3>Allot contract allowance aka approval</h3>
+            <ContractForm contract="PredictiveBetToken" method="approve" sendArgs={{from: this.props.accounts[0]}} labels={['To user', 'Amount to allow']} />
+            <p></p>
+            <h3> Exchange ETH/PBT</h3>
+            <p>1 ETH = 1000 PBT</p>
+              <p></p>
+            <form onSubmit={this.handleSubmit}>
+                <label>
+                    <input type="text" value={this.state.value} onChange={this.handleChange} />
+                </label>
+            </form>
+            <ContractForm contract="PredictiveBetToken" method="exchange" sendArgs={{from: this.props.accounts[0], value: this.state.value * 1000000000000000000,}} labels={['To x', 'Amount to Send']} />
 
             <br/><br/>
           </div>
