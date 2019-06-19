@@ -1,0 +1,113 @@
+// Copyright 2015 gRPC authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.helloworld";
+option java_outer_classname = "HelloWorldProto";
+option objc_class_prefix = "HLW";
+
+package helloworld;
+
+// The greeting service definition.
+service Greeter {
+  // Sends a greeting
+  rpc SendRegistration (Registration) returns (PrevServer) {}
+  rpc SendHandshake (Handshake) returns (KnownPeerList) {}
+  rpc SendPeer (Peer) returns (Blank) {}
+  rpc PullPeers (Blank) returns (KnownPeerList) {}
+
+  rpc BroadcastTransaction (Transaction) returns (Blank) {}
+  rpc BroadcastBlock (Block) returns (Blank) {}
+
+  rpc PullTransactions (Blank) returns (Transactions) {}
+  rpc PullBlocks (Blank) returns (Blocks) {}
+
+  rpc PullTransactionSize (Blank) returns (Number) {}
+  rpc PullBlockSize (Blank) returns (Number) {}
+
+  rpc SendRegistration2 (Registration2) returns (PrevServer2) {}
+
+}
+
+message Number {
+  int32 size = 1;
+}
+// The request message containing the user's name.
+message Registration2 {
+  string message = 1;
+}
+
+// The response message containing the greetings
+message PrevServer2 {
+  string message = 1;
+}
+
+// The request message containing the user's name.
+message Transaction {
+  string message = 1;
+}
+
+// The request message containing the user's name.
+message Block {
+  string message = 1;
+}
+
+// The request message containing the user's name.
+message Transactions {
+  string message = 1;
+}
+
+// The request message containing the user's name.
+message Blocks {
+  string message = 1;
+}
+
+
+// The request message containing the user's name.
+message Registration {
+  string message = 1;
+}
+
+// The response message containing the greetings
+message PrevServer {
+  string message = 1;
+}
+
+// The request message containing the user's name.
+message Handshake {
+  string message = 1;
+}
+
+// The response message containing the greetings\
+message KnownPeerList {
+  repeated string message = 1;
+}
+
+// The request message containing the user's name.
+message Peer {
+  string message = 1;
+}
+
+// The request message containing the user's name.
+message Blank {
+  string message = 1;
+}
+
+
+
+
+
+
